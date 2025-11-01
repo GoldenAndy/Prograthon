@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Gestion_de_Labs.Models.Reservacion
 @{
+    ViewData["Title"] = "Editar Reserva";
 }
+
+<h2>Editar Reserva</h2>
+
+<form asp-action="Editar" method="post">
+    <input type="hidden" asp-for="Reserva_Id" />
+
+    <div class="form-group">
+        <label>Usuario</label>
+        <select asp-for="Usuario_Id" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Usuarios, "Id", "Nombre"))"></select>
+    </div>
+    <div class="form-group">
+        <label>Laboratorio</label>
+        <select asp-for="Laboratorio_Id" class="form-control"
+                asp-items="@(new SelectList(ViewBag.Laboratorios, "Id", "Nombre"))"></select>
+    </div>
+    <div class="form-group">
+        <label>Fecha</label>
+        <input asp-for="Fecha" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Hora</label>
+        <input asp-for="Hora" type="time" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Cancelar</a>
+</form>

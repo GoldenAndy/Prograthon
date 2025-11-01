@@ -1,5 +1,35 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<Gestion_de_Labs.Models.Reservacion>
+
 @{
+    ViewData["Title"] = "Reservas";
 }
+
+<h2>Reservas</h2>
+<a class="btn btn-success mb-3" asp-action="Crear">Nueva Reserva</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Laboratorio</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Usuario?.Nombre</td>
+                <td>@r.Laboratorio?.Nombre</td>
+                <td>@r.Fecha.ToShortDateString()</td>
+                <td>@r.Hora</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@r.Reserva_Id" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@r.Reserva_Id" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
