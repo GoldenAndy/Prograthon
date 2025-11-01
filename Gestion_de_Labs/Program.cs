@@ -1,4 +1,5 @@
 using Gestion_de_Labs.Data;
+using Gestion_de_Labs.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,8 @@ builder.Services.AddControllersWithViews();
 var cs = builder.Configuration.GetConnectionString("MySqlConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
+
+builder.Services.AddScoped<LaboratorioService>();
 
 var app = builder.Build();
 
