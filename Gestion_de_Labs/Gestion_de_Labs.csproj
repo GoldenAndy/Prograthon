@@ -9,6 +9,9 @@
   <ItemGroup>
     <Folder Include="Business\" />
     <Folder Include="Service\" />
+    <Folder Include="Views\Laboratorios\" />
+    <Folder Include="Views\Reservaciones\" />
+    <Folder Include="Views\Usuarios\" />
   </ItemGroup>
 
 </Project>
