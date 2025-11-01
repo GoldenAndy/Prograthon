@@ -16,7 +16,6 @@
                 {
                     case 1:return "Estudiante";
                     case 2:return "Profesor";
-                    default:return "Otro";
                 }
 }
         }
