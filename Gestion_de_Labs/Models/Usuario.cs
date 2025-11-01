@@ -1,7 +1,9 @@
-﻿namespace Gestion_de_Labs.Models
+﻿
+namespace Gestion_de_Labs.Models
 {
     public class Usuario
     {
+
         public int Usuario_Id { get; set; }
 
         public string Nombre { get; set; }

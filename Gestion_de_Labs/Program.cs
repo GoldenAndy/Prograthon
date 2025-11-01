@@ -1,7 +1,7 @@
 using Gestion_de_Labs.Data;
 using Gestion_de_Labs.Service;
 using Microsoft.EntityFrameworkCore;
-using Gestion_de_Labs.Services;
+using Gestion_de_Labs.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,10 +10,10 @@ var cs = builder.Configuration.GetConnectionString("MySqlConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
 
-<<<<<<< Updated upstream
+// Updated upstream
 builder.Services.AddScoped<LaboratorioService>();
-=======
->>>>>>> Stashed changes
+
+// Stashed changes
 
 var app = builder.Build();
 
