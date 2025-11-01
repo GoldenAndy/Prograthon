@@ -12,14 +12,16 @@
         {
             get
             {
-                switch (Especialidad)
+                switch (Tipo_Usuario_Id)
                 {
-                    case 1:return "Estudiante";
-                    case 2:return "Profesor";
+                    case 1: return "Estudiante";
+                    case 2: return "Profesor";
+                    default : return "Otro";
+                       
                 }
-}
-        }
 
+            }
+        }
         public string Correo { get; set; }
 
     }
