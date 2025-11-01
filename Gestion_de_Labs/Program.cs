@@ -1,7 +1,12 @@
+using Gestion_de_Labs.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+var cs = builder.Configuration.GetConnectionString("MySqlConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
 
 var app = builder.Build();
 
