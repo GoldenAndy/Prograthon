@@ -1,31 +1,56 @@
 ﻿@model Gestion_de_Labs.Models.Reservacion
+@using Microsoft.AspNetCore.Mvc.Rendering
+
 @{
     ViewData["Title"] = "Editar Reserva";
 }
 
-<h2>Editar Reserva</h2>
+<h2 class="mb-3">Editar Reserva</h2>
 
 <form asp-action="Editar" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Reserva_Id" />
 
-    <div class="form-group">
-        <label>Usuario</label>
-        <select asp-for="Usuario_Id" class="form-control"
-                asp-items="@(new SelectList(ViewBag.Usuarios, "Id", "Nombre"))"></select>
+    <div class="mb-3">
+        <label class="form-label">Usuario</label>
+        <select asp-for="Usuario_Id"
+                class="form-select"
+                asp-items="@(new SelectList((IEnumerable<Gestion_de_Labs.Models.Usuario>)ViewBag.Usuarios,
+                                                            nameof(Gestion_de_Labs.Models.Usuario.Usuario_Id),
+                                                            nameof(Gestion_de_Labs.Models.Usuario.Nombre),
+                                                            Model?.Usuario_Id))">
+        </select>
+        <span asp-validation-for="Usuario_Id" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label>Laboratorio</label>
-        <select asp-for="Laboratorio_Id" class="form-control"
-                asp-items="@(new SelectList(ViewBag.Laboratorios, "Id", "Nombre"))"></select>
+
+    <div class="mb-3">
+        <label class="form-label">Laboratorio</label>
+        <select asp-for="Laboratorio_Id"
+                class="form-select"
+                asp-items="@(new SelectList((IEnumerable<Gestion_de_Labs.Models.Laboratorio>)ViewBag.Laboratorios,
+                                                            nameof(Gestion_de_Labs.Models.Laboratorio.Laboratorio_Id),
+                                                            nameof(Gestion_de_Labs.Models.Laboratorio.Nombre),
+                                                            Model?.Laboratorio_Id))">
+        </select>
+        <span asp-validation-for="Laboratorio_Id" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label>Fecha</label>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha</label>
         <input asp-for="Fecha" type="date" class="form-control" />
+        <span asp-validation-for="Fecha" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label>Hora</label>
+
+    <div class="mb-3">
+        <label class="form-label">Hora</label>
         <input asp-for="Hora" type="time" class="form-control" />
+        <span asp-validation-for="Hora" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Cancelar</a>
+
+    <button type="submit" class="btn btn-success">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
