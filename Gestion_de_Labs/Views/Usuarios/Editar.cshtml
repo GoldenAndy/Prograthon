@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Gestion_de_Labs.Models.Usuario
+
+<h2>Editar Usuario</h2>
+
+<form asp-action="Editar" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Usuario_Id" />
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input class="form-control" asp-for="Nombre" />
+        <span class="text-danger" asp-validation-for="Nombre"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Correo</label>
+        <input class="form-control" asp-for="Correo" type="email" />
+        <span class="text-danger" asp-validation-for="Correo"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tipo de Usuario</label>
+        <select class="form-control" asp-for="Tipo_Usuario_Id" asp-items="ViewBag.TiposUsuario"></select>
+        <span class="text-danger" asp-validation-for="Tipo_Usuario_Id"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+

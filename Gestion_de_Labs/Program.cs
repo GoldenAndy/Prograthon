@@ -1,5 +1,4 @@
 using Gestion_de_Labs.Data;
-using Gestion_de_Labs.Service;
 using Microsoft.EntityFrameworkCore;
 
 

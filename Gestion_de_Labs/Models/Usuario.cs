@@ -6,7 +6,7 @@ namespace Gestion_de_Labs.Models
 
         public int Usuario_Id { get; set; }
 
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         public int Tipo_Usuario_Id { get; set; }
 
@@ -24,7 +24,7 @@ namespace Gestion_de_Labs.Models
 
             }
         }
-        public string Correo { get; set; }
+        public string? Correo { get; set; }
 
     }
 }
