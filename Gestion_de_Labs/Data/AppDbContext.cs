@@ -26,20 +26,25 @@ namespace Gestion_de_Labs.Data
             });
 
             modelBuilder.Entity<Laboratorio>()
+                e.ToTable("PROGRATHON_Laboratorio");
                 .HasKey(c => c.Laboratorio_Id);
 
             modelBuilder.Entity<Reservacion>()
+                e.ToTable("PROGRATHON_Reservacion");
                 .HasKey(c => c.Reserva_Id);
 
             modelBuilder.Entity<Reservacion>()
+                e.ToTable("PROGRATHON_Reservacion");
                 .HasOne(c => c.Usuario)
                 .WithMany()
                 .HasForeignKey(c => c.Usuario_Id);
 
             modelBuilder.Entity<Reservacion>()
+                e.ToTable("PROGRATHON_Reservacion");
                 .HasKey(c => c.Reserva_Id);
 
             modelBuilder.Entity<Reservacion>()
+                e.ToTable("PROGRATHON_Reservacion");
                 .HasOne(c => c.Laboratorio)
                 .WithMany()
                 .HasForeignKey(c => c.Laboratorio_Id);

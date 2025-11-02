@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Gestion_de_Labs.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Gestion_de_Labs.Data;
 using Gestion_de_Labs.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Gestion_de_Labs.Controllers
 {
+    [Route("Usuario")]
     public class UsuariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -15,11 +16,17 @@ namespace Gestion_de_Labs.Controllers
             _context = context;
         }
 
+        //Listar
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Usuario.ToListAsync());
+            var usuarios = await _context.PROGRATHON_Usuario
+            .AsNoTracking()
+            .ToListAsync();
+            return View(usuarios);
         }
 
+
+        //Dropdown tipo de usuario
         private void CargarTiposUsuarioDropDown(int? seleccionado = null)
         {
             var opciones = new[]
@@ -32,75 +39,92 @@ namespace Gestion_de_Labs.Controllers
             if (seleccionado.HasValue)
             {
                 foreach (var op in opciones)
-                {
                     op.Selected = op.Value == seleccionado.Value.ToString();
-                }
             }
 
             ViewBag.TiposUsuario = opciones;
         }
 
-        //GET:/Usuarios/Crear
+
+        //Crear
+        [HttpGet]
         public IActionResult Crear()
         {
             CargarTiposUsuarioDropDown();
             return View();
         }
 
-        //POST:/Usuarios/Crear
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Crear(Usuario _usuario)
+        public async Task<IActionResult> Crear(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(_usuario);
+                _context.PROGRATHON_Usuario.Add(usuario);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            CargarTiposUsuarioDropDown(_usuario?.Tipo_Usuario_Id);
-            return View(_usuario);
+            CargarTiposUsuarioDropDown(usuario?.Tipo_Usuario_Id);
+            return View(usuario);
         }
 
-        //GET:/Usuarios/Editar/x
-        public async Task<IActionResult> Editar(int? id)
+
+        //Editar
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
         {
-            if (id == null) return NotFound();
+            var usuario = await _context.PROGRATHON_Usuario.FindAsync(id);
+            if (usuario == null)
+                return NotFound();
 
-            var itemUsuario = await _context.Usuario.FindAsync(id);
-            if (itemUsuario == null) return NotFound();
-
-            CargarTiposUsuarioDropDown(itemUsuario.Tipo_Usuario_Id);
-            return View(itemUsuario);
+            CargarTiposUsuarioDropDown(usuario.Tipo_Usuario_Id);
+            return View(usuario);
         }
 
-        //POST:/Usuarios/Editar
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(Usuario _usuario)
+        public async Task<IActionResult> Editar(Usuario usuario)
         {
             if (ModelState.IsValid)
             {
-                _context.Update(_usuario);
+                _context.Update(usuario);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            CargarTiposUsuarioDropDown(_usuario?.Tipo_Usuario_Id);
-            return View(_usuario);
+            CargarTiposUsuarioDropDown(usuario?.Tipo_Usuario_Id);
+            return View(usuario);
         }
 
-        //GET:/Usuarios/Eliminar/x
-        public async Task<IActionResult> Eliminar(int? id)
+
+        //Eliminar
+        [HttpGet]
+        public async Task<IActionResult> Eliminar(int id)
         {
-            if (id == null) return NotFound();
+            var usuario = await _context.PROGRATHON_Usuario
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Usuario_Id == id);
 
-            var itemUsuario = await _context.Usuario.FindAsync(id);
-            if (itemUsuario == null) return NotFound();
+            if (usuario == null)
+                return NotFound();
 
-            return View(itemUsuario);
+            return View(usuario);
         }
 
+        [HttpPost, ActionName("Eliminar")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var usuario = await _context.PROGRATHON_Usuario.FindAsync(id);
+            if (usuario != null)
+            {
+                _context.PROGRATHON_Usuario.Remove(usuario);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
