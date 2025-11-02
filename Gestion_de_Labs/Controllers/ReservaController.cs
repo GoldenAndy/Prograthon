@@ -18,8 +18,8 @@ namespace Gestion_de_Labs.Controllers
         public async Task<IActionResult> Index()
         {
             var reservas = await _context.PROGRATHON_Reservacion
-                .Include(r => r.Usuario_Id)
-                .Include(r => r.Laboratorio_Id)
+                .Include(r => r.Usuario) 
+                .Include(r => r.Laboratorio) 
                 .ToListAsync();
 
             return View(reservas);
@@ -91,8 +91,8 @@ namespace Gestion_de_Labs.Controllers
         public async Task<IActionResult> Eliminar(int id)
         {
             var reserva = await _context.PROGRATHON_Reservacion
-                .Include(r => r.Usuario_Id)
-                .Include(r => r.Laboratorio_Id)
+                .Include(r => r.Usuario)      // <-- navegación
+                .Include(r => r.Laboratorio)  // <-- navegación
                 .FirstOrDefaultAsync(r => r.Reserva_Id == id);
 
             if (reserva == null)

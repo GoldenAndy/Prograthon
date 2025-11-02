@@ -1,7 +1,7 @@
 using Gestion_de_Labs.Data;
 using Gestion_de_Labs.Service;
 using Microsoft.EntityFrameworkCore;
-using Gestion_de_Labs.Service;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

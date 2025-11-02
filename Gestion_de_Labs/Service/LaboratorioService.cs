@@ -37,11 +37,16 @@ namespace Gestion_de_Labs.Service
         public void Eliminar(int id)
         {
             var lab = _context.PROGRATHON_Laboratorio.Find(id);
-            if (lab != null)
-            {
-                _context.PROGRATHON_Laboratorio.Remove(lab);
-                _context.SaveChanges();
-            }
+            if (lab == null)
+                throw new InvalidOperationException("El laboratorio no existe.");
+            bool tieneReservas = _context.PROGRATHON_Reservacion
+                .Any(r => r.Laboratorio_Id == id);
+
+            if (tieneReservas)
+                throw new InvalidOperationException("No se puede eliminar el laboratorio porque tiene reservaciones en curso.");
+
+            _context.PROGRATHON_Laboratorio.Remove(lab);
+            _context.SaveChanges();
         }
     }
 }

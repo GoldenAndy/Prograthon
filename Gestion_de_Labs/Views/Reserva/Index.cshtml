@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Gestion_de_Labs.Models.Reservacion>
+
+@{
+    ViewData["Title"] = "Reservas";
+}
+
+<h2 class="mb-3">Reservas</h2>
+
+<a class="btn btn-success mb-3" asp-action="Crear">Nueva Reserva</a>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No hay reservas registradas.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Laboratorio</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th style="width:160px">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Usuario?.Nombre</td>
+                    <td>@r.Laboratorio?.Nombre</td>
+                    <td>@r.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@r.Hora.ToString("HH\\:mm")</td>
+                    <td>
+                        <a asp-action="Editar" asp-route-id="@r.Reserva_Id" class="btn btn-warning btn-sm me-1">Editar</a>
+                        <a asp-action="Eliminar" asp-route-id="@r.Reserva_Id" class="btn btn-danger btn-sm">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

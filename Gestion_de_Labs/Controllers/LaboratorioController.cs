@@ -1,6 +1,8 @@
 ﻿using Gestion_de_Labs.Models;
 using Gestion_de_Labs.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 
 namespace Gestion_de_Labs.Controllers
 {
@@ -49,11 +51,43 @@ namespace Gestion_de_Labs.Controllers
         [HttpPost]
         public IActionResult Eliminar(int id)
         {
-            if (id <= 0)
-                return BadRequest("ID inválido");
+            try
+            {
+                _laboratorioService.Eliminar(id);
+                return Json(new { exito = true, mensaje = "Laboratorio eliminado correctamente." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Json(new { exito = false, mensaje = ex.Message });
+            }
+            catch (DbUpdateException dbEx)
+            {
+                var inner = dbEx.InnerException;
+                var innerType = inner?.GetType().FullName ?? "";
+                var innerMsg = inner?.Message ?? dbEx.Message;
 
-            _laboratorioService.Eliminar(id);
-            return Ok(new { mensaje = "Laboratorio eliminado correctamente" });
+                bool esFK =
+                    innerMsg.Contains("FOREIGN KEY", StringComparison.OrdinalIgnoreCase) ||
+                    innerMsg.Contains("constraint fails", StringComparison.OrdinalIgnoreCase) ||
+                    innerType.Contains("MySqlConnector.MySqlException") ||
+                    innerType.Contains("MySql.Data.MySqlClient.MySqlException");
+
+                if (esFK)
+                {
+                    return Json(new
+                    {
+                        exito = false,
+                        mensaje = "No se puede eliminar el laboratorio porque tiene reservaciones en curso."
+                    });
+                }
+
+                return Json(new { exito = false, mensaje = "Error de base de datos al eliminar el laboratorio." });
+            }
+            catch (Exception)
+            {
+                return Json(new { exito = false, mensaje = "Error al intentar eliminar el laboratorio." });
+            }
         }
+
     }
 }
