@@ -3,6 +3,7 @@ using Gestion_de_Labs.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
+using System.Linq;
 
 namespace Gestion_de_Labs.Controllers
 {
@@ -15,11 +16,14 @@ namespace Gestion_de_Labs.Controllers
             _laboratorioService = laboratorioService;
         }
 
+        // Vista
         public IActionResult Index()
         {
             var laboratorios = _laboratorioService.ListarTodos();
             return View(laboratorios);
         }
+
+        // ======== API ========
 
         [HttpGet]
         public IActionResult ObtenerTodos()
@@ -28,24 +32,80 @@ namespace Gestion_de_Labs.Controllers
             return Json(laboratorios);
         }
 
+        // 🔹 NUEVO: lo usa progra.js al editar
+        [HttpGet]
+        public IActionResult ObtenerPorId(int id)
+        {
+            var lab = _laboratorioService.ObtenerPorId(id);
+            if (lab == null)
+                return NotFound(new { mensaje = "No existe el laboratorio." });
+            return Json(lab);
+        }
+
         [HttpPost]
         public IActionResult Crear([FromBody] Laboratorio lab)
         {
             if (lab == null)
-                return BadRequest("Datos inválidos");
+                return BadRequest(new { mensaje = "Datos inválidos (cuerpo vacío)." });
 
-            _laboratorioService.Crear(lab);
-            return Ok(new { mensaje = "Laboratorio creado correctamente" });
+            if (!ModelState.IsValid)
+            {
+                var errores = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage) ? e.Exception?.Message : e.ErrorMessage);
+                return BadRequest(new { mensaje = "Validación fallida", errores });
+            }
+
+            try
+            {
+                _laboratorioService.Crear(lab);
+                return Ok(new { mensaje = "Laboratorio creado correctamente" });
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new
+                {
+                    mensaje = "DB error al crear",
+                    detalle = ex.InnerException?.Message ?? ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error inesperado al crear", detalle = ex.Message });
+            }
         }
 
         [HttpPost]
         public IActionResult Editar([FromBody] Laboratorio lab)
         {
             if (lab == null)
-                return BadRequest("Datos inválidos");
+                return BadRequest(new { mensaje = "Datos inválidos (cuerpo vacío)." });
 
-            _laboratorioService.Editar(lab);
-            return Ok(new { mensaje = "Laboratorio editado correctamente" });
+            if (!ModelState.IsValid)
+            {
+                var errores = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage) ? e.Exception?.Message : e.ErrorMessage);
+                return BadRequest(new { mensaje = "Validación fallida", errores });
+            }
+
+            try
+            {
+                _laboratorioService.Editar(lab);
+                return Ok(new { mensaje = "Laboratorio editado correctamente" });
+            }
+            catch (DbUpdateException ex)
+            {
+                return StatusCode(500, new
+                {
+                    mensaje = "DB error al editar",
+                    detalle = ex.InnerException?.Message ?? ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error inesperado al editar", detalle = ex.Message });
+            }
         }
 
         [HttpPost]
@@ -58,6 +118,7 @@ namespace Gestion_de_Labs.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                // Error lógico del servicio
                 return Json(new { exito = false, mensaje = ex.Message });
             }
             catch (DbUpdateException dbEx)
@@ -81,13 +142,13 @@ namespace Gestion_de_Labs.Controllers
                     });
                 }
 
-                return Json(new { exito = false, mensaje = "Error de base de datos al eliminar el laboratorio." });
+                return Json(new { exito = false, mensaje = "Error de base de datos al eliminar el laboratorio.", detalle = innerMsg });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Json(new { exito = false, mensaje = "Error al intentar eliminar el laboratorio." });
+                // Cualquier otro error inesperado
+                return Json(new { exito = false, mensaje = "Error al intentar eliminar el laboratorio.", detalle = ex.Message });
             }
         }
-
     }
 }

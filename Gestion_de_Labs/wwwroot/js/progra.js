@@ -9,27 +9,37 @@
     });
 
     $("#btnGuardar").click(function () {
-        const lab = {
-            Laboratorio_Id: $("#Laboratorio_Id").val(),
-            Nombre: $("#Nombre").val(),
-            Capacidad: $("#Capacidad").val(),
-            Responsable: $("#Responsable").val()
-        };
+        const idVal = $("#Laboratorio_Id").val();
 
-        const url = lab.Laboratorio_Id ? "/Laboratorio/Editar" : "/Laboratorio/Crear";
+        const lab = {
+            Laboratorio_Id: idVal ? parseInt(idVal, 10) : null,
+            Nombre: $("#Nombre").val().trim(),
+            Capacidad: parseInt($("#Capacidad").val(), 10),
+            Responsable: $("#Responsable").val().trim()
+        };
+        if (!idVal) delete lab.Laboratorio_Id
+
+        const url = idVal ? "/Laboratorio/Editar" : "/Laboratorio/Crear";
 
         $.ajax({
             url: url,
             type: "POST",
             data: JSON.stringify(lab),
-            contentType: "application/json",
+            contentType: "application/json; charset=utf-8",
             success: function (r) {
-                mostrarToast("Operación exitosa", r.mensaje, "success");
+                mostrarToast("Operación exitosa", r.mensaje || "Listo.", "success");
                 $("#modalLaboratorio").modal("hide");
                 cargarLaboratorios();
             },
-            error: function () {
-                mostrarToast("Error", "No se pudo guardar el laboratorio.", "danger");
+            error: function (xhr) {
+                let msg = "No se pudo guardar el laboratorio.";
+                try {
+                    const resp = xhr.responseJSON || JSON.parse(xhr.responseText);
+                    if (resp && (resp.mensaje || resp.detalle)) {
+                        msg = (resp.mensaje || msg) + (resp.detalle ? `\n${resp.detalle}` : "");
+                    }
+                } catch { /* ignore */ }
+                mostrarToast("Error", msg, "danger");
             }
         });
     });
@@ -85,6 +95,7 @@
         });
     });
 
+
     let idAEliminar = null;
     $(document).on("click", ".btnEliminar", function () {
         idAEliminar = $(this).data("id");
@@ -106,7 +117,7 @@
             } else if (/(reserv|curso|asociad)/i.test(r.mensaje)) {
                 mostrarToast("Acción bloqueada", r.mensaje, "warning");
             } else {
-                mostrarToast("Error", r.mensaje, "danger");
+                mostrarToast("Error", r.mensaje || "No se pudo eliminar.", "danger");
             }
         }).fail(function () {
             $("#modalConfirmarEliminar").modal("hide");

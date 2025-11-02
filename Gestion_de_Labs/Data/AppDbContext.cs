@@ -13,26 +13,28 @@ namespace Gestion_de_Labs.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            // USUARIO
             modelBuilder.Entity<Usuario>(e =>
             {
                 e.ToTable("PROGRATHON_Usuario");
                 e.HasKey(x => x.Usuario_Id);
             });
 
-
+            // LABORATORIO
             modelBuilder.Entity<Laboratorio>(e =>
             {
                 e.ToTable("PROGRATHON_Laboratorio");
                 e.HasKey(x => x.Laboratorio_Id);
+
             });
 
-
+            // RESERVA
             modelBuilder.Entity<Reservacion>(e =>
             {
-                e.ToTable("PROGRATHON_Reservacion");
+                e.ToTable("PROGRATHON_Reserva");
                 e.HasKey(x => x.Reserva_Id);
 
+                // FKs
                 e.HasOne(x => x.Usuario)
                  .WithMany()
                  .HasForeignKey(x => x.Usuario_Id)
@@ -42,6 +44,10 @@ namespace Gestion_de_Labs.Data
                  .WithMany()
                  .HasForeignKey(x => x.Laboratorio_Id)
                  .OnDelete(DeleteBehavior.Restrict);
+
+                // Tipos exactos en MySQL
+                e.Property(x => x.Fecha).HasColumnType("date");
+                e.Property(x => x.Hora).HasColumnType("time");
             });
 
             base.OnModelCreating(modelBuilder);
