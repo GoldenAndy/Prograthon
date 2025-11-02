@@ -13,11 +13,13 @@ namespace Gestion_de_Labs.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Usuario>(e =>
             {
                 e.ToTable("PROGRATHON_Usuario");
                 e.HasKey(x => x.Usuario_Id);
             });
+
 
             modelBuilder.Entity<Laboratorio>(e =>
             {
@@ -25,29 +27,22 @@ namespace Gestion_de_Labs.Data
                 e.HasKey(x => x.Laboratorio_Id);
             });
 
-            modelBuilder.Entity<Laboratorio>()
-                e.ToTable("PROGRATHON_Laboratorio");
-                .HasKey(c => c.Laboratorio_Id);
 
-            modelBuilder.Entity<Reservacion>()
+            modelBuilder.Entity<Reservacion>(e =>
+            {
                 e.ToTable("PROGRATHON_Reservacion");
-                .HasKey(c => c.Reserva_Id);
+                e.HasKey(x => x.Reserva_Id);
 
-            modelBuilder.Entity<Reservacion>()
-                e.ToTable("PROGRATHON_Reservacion");
-                .HasOne(c => c.Usuario)
-                .WithMany()
-                .HasForeignKey(c => c.Usuario_Id);
+                e.HasOne(x => x.Usuario)
+                 .WithMany()
+                 .HasForeignKey(x => x.Usuario_Id)
+                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Reservacion>()
-                e.ToTable("PROGRATHON_Reservacion");
-                .HasKey(c => c.Reserva_Id);
-
-            modelBuilder.Entity<Reservacion>()
-                e.ToTable("PROGRATHON_Reservacion");
-                .HasOne(c => c.Laboratorio)
-                .WithMany()
-                .HasForeignKey(c => c.Laboratorio_Id);
+                e.HasOne(x => x.Laboratorio)
+                 .WithMany()
+                 .HasForeignKey(x => x.Laboratorio_Id)
+                 .OnDelete(DeleteBehavior.Restrict);
+            });
 
             base.OnModelCreating(modelBuilder);
         }
