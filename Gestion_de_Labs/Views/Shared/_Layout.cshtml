@@ -12,83 +12,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - Gestión de Labs</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Gestion_de_Labs.styles.css" asp-append-version="true" />
-
-    <style>
-        .bg-fide-blue {
-            background-color: #0033A0 !important;
-        }
-
-        .bg-fide-yellow {
-            background-color: #FFC400 !important;
-            color: #000 !important;
-        }
-        /* resaltar link activo en navbar */
-        .navbar .nav-link.active, .navbar .nav-link:hover, .navbar .nav-link:focus {
-            color: #FFC400 !important;
-        }
-    </style>
 </head>
-
 <body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-fide-blue shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0033A0;">
             <div class="container">
-                <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">
+                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-mortarboard"></i> Gestión de Labs
                 </a>
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                        aria-controls="mainNav" aria-expanded="false" aria-label="Abrir menú">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="mainNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link @(IsActive("Home", "Index") ? "active" : "")"
-                               asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(IsActive("Reserva") ? "active" : "")"
-                               asp-area="" asp-controller="Reserva" asp-action="Index">Reserva</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(IsActive("Laboratorio") ? "active" : "")"
-                               asp-area="" asp-controller="Laboratorio" asp-action="Index">
-                                <i class="bi bi-flask me-1"></i> Laboratorios
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(IsActive("Home", "Privacy") ? "active" : "")"
-                               asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link @(IsActive("Home", "Index") ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link @(IsActive("Reserva") ? "active" : "")" asp-controller="Reserva" asp-action="Index">Reserva</a></li>
+                        <li class="nav-item"><a class="nav-link @(IsActive("Laboratorio") ? "active" : "")" asp-controller="Laboratorio" asp-action="Index"><i class="bi bi-flask me-1"></i>Laboratorios</a></li>
+                        <li class="nav-item"><a class="nav-link @(IsActive("Home", "Privacy") ? "active" : "")" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
                     </ul>
-
-                    <span class="badge bg-fide-yellow fw-semibold">UFID · Demo</span>
+                    <span class="badge" style="background-color:#FFC400;color:#111;font-weight:600;">UFID · Demo</span>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main" class="container py-4 flex-fill">
+    <main class="flex-grow-1 container my-4">
         @RenderBody()
     </main>
 
-    <footer class="mt-auto border-top small text-muted py-3 bg-light">
-        <div class="container d-flex justify-content-between align-items-center">
+    <footer class="mt-auto border-top small text-muted py-3">
+        <div class="container d-flex justify-content-between">
             <span>© @DateTime.Now.Year - Gestión de Labs</span>
-            <a class="link-secondary text-decoration-none"
-               asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a class="link-secondary" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
