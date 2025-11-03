@@ -1,31 +1,41 @@
 ﻿@model Gestion_de_Labs.Models.Usuario
+@{
+    ViewData["Title"] = "Editar Usuario";
+}
 
-<h2>Editar Usuario</h2>
+<h2 class="mb-4">Editar Usuario</h2>
 
-<form asp-action="Editar" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-action="Editar" method="post" novalidate>
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <input type="hidden" asp-for="Usuario_Id" />
 
     <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input class="form-control" asp-for="Nombre" />
-        <span class="text-danger" asp-validation-for="Nombre"></span>
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Correo</label>
-        <input class="form-control" asp-for="Correo" type="email" />
-        <span class="text-danger" asp-validation-for="Correo"></span>
+        <label asp-for="Correo" class="form-label"></label>
+        <input asp-for="Correo" class="form-control" type="email" />
+        <span asp-validation-for="Correo" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Tipo de Usuario</label>
-        <select class="form-control" asp-for="Tipo_Usuario_Id" asp-items="ViewBag.TiposUsuario"></select>
-        <span class="text-danger" asp-validation-for="Tipo_Usuario_Id"></span>
+        <label asp-for="Tipo_Usuario_Id" class="form-label">Tipo de Usuario</label>
+        <select asp-for="Tipo_Usuario_Id" asp-items="ViewBag.TiposUsuario" class="form-select"></select>
+        <span asp-validation-for="Tipo_Usuario_Id" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
 </form>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,6 +1,7 @@
 ﻿@model Gestion_de_Labs.Models.Usuario
 
 <h2>Eliminar Usuario</h2>
+
 <div class="alert alert-warning">
     ¿Seguro que desea eliminar a <strong>@Model.Nombre</strong>?
 </div>
@@ -16,8 +17,14 @@
     <dd class="col-sm-10">@((Model.Tipo_Usuario_Nombre) ?? Model.Tipo_Usuario_Id.ToString())</dd>
 </dl>
 
-<form asp-action="Eliminar" method="post">
+<form asp-controller="Usuarios"
+      asp-action="EliminarConfirmado"
+      asp-route-id="@Model.Usuario_Id"
+      method="post"
+      class="d-inline">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Usuario_Id" />
     <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>
+
+<a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>

@@ -35,9 +35,18 @@
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item"><a class="nav-link @(IsActive("Home", "Index") ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a></li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link @(IsActive("Usuario") ? "active" : "")"
+                               asp-controller="Usuarios" asp-action="Index">
+                                </i>Usuarios
+                            </a>
+                        </li>
+
                         <li class="nav-item"><a class="nav-link @(IsActive("Reserva") ? "active" : "")" asp-controller="Reserva" asp-action="Index">Reserva</a></li>
                         <li class="nav-item"><a class="nav-link @(IsActive("Laboratorio") ? "active" : "")" asp-controller="Laboratorio" asp-action="Index"><i class="bi bi-flask me-1"></i>Laboratorios</a></li>
                         <li class="nav-item"><a class="nav-link @(IsActive("Home", "Privacy") ? "active" : "")" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                    
                     </ul>
                     <span class="badge" style="background-color:#FFC400;color:#111;font-weight:600;">UFID · Demo</span>
                 </div>
