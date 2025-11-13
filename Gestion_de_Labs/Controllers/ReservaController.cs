@@ -1,117 +1,91 @@
-﻿using Gestion_de_Labs.Data;
+﻿using Gestion_de_Labs.Models;
+using Gestion_de_Labs.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Gestion_de_Labs.Models;
 
 namespace Gestion_de_Labs.Controllers
 {
     public class ReservaController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ReservaService _reservaService;
+        private readonly UsuarioService _usuarioService;
+        private readonly LaboratorioService _laboratorioService;
 
-        public ReservaController(AppDbContext context)
+        public ReservaController(
+            ReservaService reservaService,
+            UsuarioService usuarioService,
+            LaboratorioService laboratorioService)
         {
-            _context = context;
+            _reservaService = reservaService;
+            _usuarioService = usuarioService;
+            _laboratorioService = laboratorioService;
         }
 
-        // ================== LISTAR ==================
-        public async Task<IActionResult> Index()
-        {
-            var reservas = await _context.PROGRATHON_Reservacion
-                .Include(r => r.Usuario) 
-                .Include(r => r.Laboratorio) 
-                .ToListAsync();
+        // Vista principal
+        public IActionResult Index() => View();
 
-            return View(reservas);
-        }
+        // ======== API ========
 
-
-
-
-        // ================== CREAR ==================
         [HttpGet]
-        public IActionResult Crear()
+        public IActionResult ObtenerTodos()
         {
-            ViewBag.Usuarios = _context.PROGRATHON_Usuario.ToList();
-            ViewBag.Laboratorios = _context.PROGRATHON_Laboratorio.ToList();
-            return View();
+            return Json(_reservaService.ListarTodos());
+        }
+
+        [HttpGet]
+        public IActionResult ObtenerPorId(int id)
+        {
+            var r = _reservaService.ObtenerPorId(id);
+            if (r == null)
+                return NotFound(new { mensaje = "Reserva no encontrada." });
+
+            return Json(r);
+        }
+
+        [HttpGet]
+        public IActionResult ListarUsuarios()
+            => Json(_usuarioService.ListarTodos());
+
+        [HttpGet]
+        public IActionResult ListarLaboratorios()
+            => Json(_laboratorioService.ListarTodos());
+
+
+        [HttpPost]
+        public IActionResult Crear([FromBody] Reservacion reserva)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new { mensaje = "Datos inválidos." });
+
+            _reservaService.Crear(reserva);
+            return Ok(new { mensaje = "Reserva creada correctamente." });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Reservacion reserva)
+        public IActionResult Editar([FromBody] Reservacion reserva)
         {
-            if (ModelState.IsValid)
-            {
-                _context.PROGRATHON_Reservacion.Add(reserva);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(new { mensaje = "Datos inválidos." });
 
-            ViewBag.Usuarios = _context.PROGRATHON_Usuario.ToList();
-            ViewBag.Laboratorios = _context.PROGRATHON_Laboratorio.ToList();
-            return View(reserva);
-        }
-
-
-
-
-        // ================== EDITAR ==================
-        [HttpGet]
-        public async Task<IActionResult> Editar(int id)
-        {
-            var reserva = await _context.PROGRATHON_Reservacion.FindAsync(id);
-            if (reserva == null)
-                return NotFound();
-
-            ViewBag.Usuarios = _context.PROGRATHON_Usuario.ToList();
-            ViewBag.Laboratorios = _context.PROGRATHON_Laboratorio.ToList();
-            return View(reserva);
+            _reservaService.Editar(reserva);
+            return Ok(new { mensaje = "Reserva editada correctamente." });
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar(Reservacion reserva)
+        public IActionResult Eliminar(int id)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Update(reserva);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _reservaService.Eliminar(id);
+                return Json(new { exito = true, mensaje = "Reserva eliminada correctamente." });
             }
-
-            ViewBag.Usuarios = _context.PROGRATHON_Usuario.ToList();
-            ViewBag.Laboratorios = _context.PROGRATHON_Laboratorio.ToList();
-            return View(reserva);
-        }
-
-
-
-
-        // ================== ELIMINAR ==================
-        [HttpGet]
-        public async Task<IActionResult> Eliminar(int id)
-        {
-            var reserva = await _context.PROGRATHON_Reservacion
-                .Include(r => r.Usuario)      // <-- navegación
-                .Include(r => r.Laboratorio)  // <-- navegación
-                .FirstOrDefaultAsync(r => r.Reserva_Id == id);
-
-            if (reserva == null)
-                return NotFound();
-
-            return View(reserva);
-        }
-
-        [HttpPost, ActionName("Eliminar")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var reserva = await _context.PROGRATHON_Reservacion.FindAsync(id);
-            if (reserva != null)
+            catch (InvalidOperationException ex)
             {
-                _context.PROGRATHON_Reservacion.Remove(reserva);
-                await _context.SaveChangesAsync();
+                return Json(new { exito = false, mensaje = ex.Message });
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                return Json(new { exito = false, mensaje = "Error inesperado.", detalle = ex.Message });
+            }
         }
     }
 }

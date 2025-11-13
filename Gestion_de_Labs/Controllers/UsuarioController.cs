@@ -1,109 +1,82 @@
-﻿using Gestion_de_Labs.Data;
+﻿using Gestion_de_Labs.Models;
+using Gestion_de_Labs.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Gestion_de_Labs.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Gestion_de_Labs.Controllers
 {
     public class UsuariosController : Controller
     {
-        private readonly AppDbContext _context;
-        public UsuariosController(AppDbContext context) => _context = context;
+        private readonly UsuarioService _usuarioService;
 
-        // GET /Usuarios
-        public async Task<IActionResult> Index()
+        public UsuariosController(UsuarioService usuarioService)
         {
-            var usuarios = await _context.PROGRATHON_Usuario.AsNoTracking().ToListAsync();
-            return View(usuarios);
+            _usuarioService = usuarioService;
         }
 
-        // GET /Usuarios/Crear
-        [HttpGet]
-        public IActionResult Crear()
+        // VISTA
+        public IActionResult Index()
         {
-            CargarTiposUsuarioDropDown();
             return View();
         }
 
-        // POST /Usuarios/Crear
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Crear(Usuario usuario)
-        {
-            if (!ModelState.IsValid)
-            {
-                CargarTiposUsuarioDropDown(usuario?.Tipo_Usuario_Id);
-                return View(usuario);
-            }
-            _context.PROGRATHON_Usuario.Add(usuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET /Usuarios/Editar/5
+        // ======== API ========
         [HttpGet]
-        public async Task<IActionResult> Editar(int id)
+        public IActionResult ObtenerTodos()
         {
-            var usuario = await _context.PROGRATHON_Usuario.FindAsync(id);
-            if (usuario == null) return NotFound();
-
-            CargarTiposUsuarioDropDown(usuario.Tipo_Usuario_Id);
-            return View(usuario);
+            var usuarios = _usuarioService.ListarTodos();
+            return Json(usuarios);
         }
 
-        // POST /Usuarios/Editar
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(Usuario usuario)
-        {
-            if (!ModelState.IsValid)
-            {
-                CargarTiposUsuarioDropDown(usuario?.Tipo_Usuario_Id);
-                return View(usuario);
-            }
-            _context.Update(usuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        // GET /Usuarios/Eliminar/5
         [HttpGet]
-        public async Task<IActionResult> Eliminar(int id)
+        public IActionResult ObtenerPorId(int id)
         {
-            var usuario = await _context.PROGRATHON_Usuario.AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Usuario_Id == id);
-            if (usuario == null) return NotFound();
-            return View(usuario);
+            var usuario = _usuarioService.ObtenerPorId(id);
+            if (usuario == null)
+                return NotFound(new { mensaje = "Usuario no encontrado." });
+
+            return Json(usuario);
         }
 
-        // POST /Usuarios/Eliminar
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EliminarConfirmado(int id)
+        public IActionResult Crear([FromBody] Usuario usuario)
         {
-            var usuario = await _context.PROGRATHON_Usuario.FindAsync(id);
-            if (usuario != null)
+            if (usuario == null || !ModelState.IsValid)
             {
-                _context.PROGRATHON_Usuario.Remove(usuario);
-                await _context.SaveChangesAsync();
+                return BadRequest(new { mensaje = "Datos inválidos" });
             }
-            return RedirectToAction(nameof(Index));
+
+            _usuarioService.Crear(usuario);
+            return Ok(new { mensaje = "Usuario creado correctamente." });
         }
 
-        private void CargarTiposUsuarioDropDown(int? seleccionado = null)
+        [HttpPost]
+        public IActionResult Editar([FromBody] Usuario usuario)
         {
-            var opciones = new[]
+            if (usuario == null || !ModelState.IsValid)
             {
-                new SelectListItem { Value = "1", Text = "Estudiante" },
-                new SelectListItem { Value = "2", Text = "Profesor" },
-                new SelectListItem { Value = "3", Text = "Otro" }
-            };
-            if (seleccionado.HasValue)
-                foreach (var op in opciones)
-                    op.Selected = op.Value == seleccionado.Value.ToString();
+                return BadRequest(new { mensaje = "Datos inválidos" });
+            }
 
-            ViewBag.TiposUsuario = opciones;
+            _usuarioService.Editar(usuario);
+            return Ok(new { mensaje = "Usuario editado correctamente." });
+        }
+
+        [HttpPost]
+        public IActionResult Eliminar(int id)
+        {
+            try
+            {
+                _usuarioService.Eliminar(id);
+                return Json(new { exito = true, mensaje = "Usuario eliminado correctamente." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Json(new { exito = false, mensaje = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { exito = false, mensaje = "Error al eliminar.", detalle = ex.Message });
+            }
         }
     }
 }

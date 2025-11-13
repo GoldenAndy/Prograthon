@@ -2,8 +2,7 @@
 using Gestion_de_Labs.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
-using System.Linq;
+
 
 namespace Gestion_de_Labs.Controllers
 {

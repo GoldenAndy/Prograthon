@@ -11,6 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Updated upstream
 builder.Services.AddScoped<LaboratorioService>();
+builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<ReservaService>();
 
 // Stashed changes
 
