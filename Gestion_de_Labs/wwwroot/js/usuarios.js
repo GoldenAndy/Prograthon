@@ -1,22 +1,14 @@
 ﻿$(document).ready(function () {
 
-    // ================================
-    //  INICIALIZAR
-    // ================================
     cargarUsuarios();
 
-    // ================================
-    //  NUEVO USUARIO
-    // ================================
     $("#btnNuevoUsuario").click(function () {
         limpiarFormularioUsuario();
         $("#tituloModalUsuario").text("Nuevo Usuario");
         $("#modalUsuario").modal("show");
     });
 
-    // ================================
-    //  GUARDAR (CREAR / EDITAR)
-    // ================================
+
     $("#btnGuardarUsuario").click(function () {
 
         const idVal = $("#Usuario_Id").val();
@@ -54,9 +46,6 @@
 
     });
 
-    // ================================
-    //  CARGAR LISTA
-    // ================================
     function cargarUsuarios() {
         $.get("/Usuarios/ObtenerTodos", function (data) {
 
@@ -94,9 +83,6 @@
         });
     }
 
-    // ================================
-    //  EDITAR
-    // ================================
     $(document).on("click", ".btnEditarUsuario", function () {
 
         const id = $(this).data("id");
@@ -121,9 +107,7 @@
 
     });
 
-    // ================================
-    //  ELIMINAR (CONFIRMACIÓN)
-    // ================================
+
     let idAEliminar = null;
 
     $(document).on("click", ".btnEliminarUsuario", function () {
@@ -158,9 +142,6 @@
 
     });
 
-    // ================================
-    //  FUNCIONES AUXILIARES
-    // ================================
     function limpiarFormularioUsuario() {
         $("#Usuario_Id").val("");
         $("#Nombre").val("");

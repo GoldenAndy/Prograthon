@@ -13,50 +13,79 @@
     <title>@ViewData["Title"] - Gestión de Labs</title>
 
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Gestion_de_Labs.styles.css" asp-append-version="true" />
 </head>
+
 <body class="d-flex flex-column min-vh-100">
+
+    <div id="ariaLiveRegion" class="visually-hidden" aria-live="polite"></div>
+
+
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#0033A0;">
             <div class="container">
+
                 <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">
                     <i class="bi bi-mortarboard"></i> Gestión de Labs
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mainNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="collapse navbar-collapse" id="mainNav">
+
                     <ul class="navbar-nav me-auto">
-                        <li class="nav-item"><a class="nav-link @(IsActive("Home", "Index") ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a></li>
-                        
                         <li class="nav-item">
-                            <a class="nav-link @(IsActive("Usuario") ? "active" : "")"
-                               asp-controller="Usuarios" asp-action="Index">
-                                </i>Usuarios
+                            <a class="nav-link @(IsActive("Home", "Index") ? "active" : "")"
+                               asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(IsActive("Usuarios") ? "active" : "")"
+                               asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(IsActive("Reserva") ? "active" : "")"
+                               asp-controller="Reserva" asp-action="Index">Reserva</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(IsActive("Laboratorio") ? "active" : "")"
+                               asp-controller="Laboratorio" asp-action="Index">
+                                <i class="bi bi-flask me-1"></i> Laboratorios
                             </a>
                         </li>
 
-                        <li class="nav-item"><a class="nav-link @(IsActive("Reserva") ? "active" : "")" asp-controller="Reserva" asp-action="Index">Reserva</a></li>
-                        <li class="nav-item"><a class="nav-link @(IsActive("Laboratorio") ? "active" : "")" asp-controller="Laboratorio" asp-action="Index"><i class="bi bi-flask me-1"></i>Laboratorios</a></li>
-                        <li class="nav-item"><a class="nav-link @(IsActive("Home", "Privacy") ? "active" : "")" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
-                    
+                        <li class="nav-item">
+                            <a class="nav-link @(IsActive("Home", "Privacy") ? "active" : "")"
+                               asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
                     </ul>
-                    <span class="badge" style="background-color:#FFC400;color:#111;font-weight:600;">UFID · Demo</span>
+
+                    <span class="badge"
+                          style="background-color:#FFC400;color:#111;font-weight:600;">
+                        UFID · Demo
+                    </span>
+
                 </div>
             </div>
         </nav>
     </header>
 
+
     <main class="flex-grow-1 container my-4">
         @RenderBody()
     </main>
+
 
     <footer class="mt-auto border-top small text-muted py-3">
         <div class="container d-flex justify-content-between">
@@ -65,11 +94,35 @@
         </div>
     </footer>
 
+
+    <div class="position-fixed bottom-0 start-0 m-3" style="z-index:1050;">
+        <div class="dropdown">
+            <button class="btn btn-primary rounded-circle p-3 shadow"
+                    type="button"
+                    id="btnAccesibilidad"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Opciones de accesibilidad">
+                <i class="bi bi-universal-access fs-4"></i>
+            </button>
+
+            <ul class="dropdown-menu" aria-labelledby="btnAccesibilidad">
+                <li><button class="dropdown-item" id="btnAumentarFuente">Aumentar tamaño de letra</button></li>
+                <li><button class="dropdown-item" id="btnDisminuirFuente">Disminuir tamaño de letra</button></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><button class="dropdown-item" id="btnContraste">Alternar alto contraste</button></li>
+            </ul>
+        </div>
+    </div>
+
+
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
+    <script src="~/js/accesibilidad.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

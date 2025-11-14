@@ -13,13 +13,11 @@ namespace Gestion_de_Labs.Controllers
             _usuarioService = usuarioService;
         }
 
-        // VISTA
         public IActionResult Index()
         {
             return View();
         }
 
-        // ======== API ========
         [HttpGet]
         public IActionResult ObtenerTodos()
         {

@@ -15,14 +15,11 @@ namespace Gestion_de_Labs.Controllers
             _laboratorioService = laboratorioService;
         }
 
-        // Vista
         public IActionResult Index()
         {
             var laboratorios = _laboratorioService.ListarTodos();
             return View(laboratorios);
         }
-
-        // ======== API ========
 
         [HttpGet]
         public IActionResult ObtenerTodos()
@@ -31,7 +28,6 @@ namespace Gestion_de_Labs.Controllers
             return Json(laboratorios);
         }
 
-        // 🔹 NUEVO: lo usa progra.js al editar
         [HttpGet]
         public IActionResult ObtenerPorId(int id)
         {
@@ -117,7 +113,7 @@ namespace Gestion_de_Labs.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                // Error lógico del servicio
+
                 return Json(new { exito = false, mensaje = ex.Message });
             }
             catch (DbUpdateException dbEx)
@@ -145,7 +141,6 @@ namespace Gestion_de_Labs.Controllers
             }
             catch (Exception ex)
             {
-                // Cualquier otro error inesperado
                 return Json(new { exito = false, mensaje = "Error al intentar eliminar el laboratorio.", detalle = ex.Message });
             }
         }

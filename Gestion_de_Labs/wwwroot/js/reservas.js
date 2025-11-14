@@ -4,18 +4,12 @@
     cargarUsuarios();
     cargarLaboratorios();
 
-    // ============================
-    // Abrir modal para nueva reserva
-    // ============================
     $("#btnNuevaReserva").click(function () {
         limpiarFormularioReserva();
         $("#tituloModalReserva").text("Nueva Reserva");
         $("#modalReserva").modal("show");
     });
 
-    // ============================
-    // Guardar (crear o editar)
-    // ============================
     $("#btnGuardarReserva").click(function () {
         const idVal = $("#Reserva_Id").val();
 
@@ -27,14 +21,12 @@
             Hora: $("#Hora").val()
         };
 
-        // Validaciones mínimas
         if (!reserva.Usuario_Id || !reserva.Laboratorio_Id ||
             !reserva.Fecha || !reserva.Hora) {
             mostrarToast("Error", "Todos los campos son obligatorios.", "danger");
             return;
         }
 
-        // API correcto
         const url = idVal ? "/Reserva/Editar" : "/Reserva/Crear";
 
         $.ajax({
@@ -58,9 +50,7 @@
         });
     });
 
-    // ============================
-    // Cargar reservas
-    // ============================
+
     function cargarReservas() {
         $.get("/Reserva/ObtenerTodos", function (data) {
             let filas = "";
@@ -93,9 +83,7 @@
         });
     }
 
-    // ============================
-    // Editar
-    // ============================
+
     $(document).on("click", ".btnEditarReserva", function () {
         const id = $(this).data("id");
 
@@ -103,7 +91,6 @@
         $("#tituloModalReserva").text("Cargando...");
         $("#modalReserva").modal("show");
 
-        // Obtener datos
         $.get(`/Reserva/ObtenerPorId?id=${id}`, function (r) {
 
             $("#Reserva_Id").val(r.reserva_Id);
@@ -121,9 +108,6 @@
     });
 
 
-    // ============================
-    // Eliminar
-    // ============================
     let idAEliminar = null;
 
     $(document).on("click", ".btnEliminarReserva", function () {
@@ -154,9 +138,6 @@
     });
 
 
-    // ============================
-    // Cargar usuarios
-    // ============================
     function cargarUsuarios() {
         $.get("/Reserva/ListarUsuarios", function (data) {
             let options = '<option value="">Seleccione...</option>';
@@ -169,9 +150,7 @@
         });
     }
 
-    // ============================
-    // Cargar laboratorios
-    // ============================
+
     function cargarLaboratorios() {
         $.get("/Reserva/ListarLaboratorios", function (data) {
             let options = '<option value="">Seleccione...</option>';
@@ -184,9 +163,7 @@
         });
     }
 
-    // ============================
-    // Utilidades
-    // ============================
+
     function limpiarFormularioReserva() {
         $("#Reserva_Id").val("");
         $("#Usuario_Id").val("");
@@ -223,14 +200,12 @@
         toast.on("hidden.bs.toast", () => toast.remove());
     }
 
-    // Formatear DateOnly (yyyy-mm-dd → dd/mm/yyyy)
     function formatearFecha(fecha) {
         if (!fecha) return "—";
         const p = fecha.split("-");
         return `${p[2]}/${p[1]}/${p[0]}`;
     }
 
-    // Formatear TimeOnly (HH:mm:ss → HH:mm)
     function formatearHora(hora) {
         if (!hora) return "—";
         return hora.substring(0, 5);

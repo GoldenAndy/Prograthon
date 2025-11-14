@@ -29,7 +29,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @* Vacío: será llenado por AJAX *@
+
                 </tbody>
             </table>
 
@@ -38,9 +38,7 @@
 </div>
 
 
-<!-- ================================
-       MODAL CREAR / EDITAR RESERVA
-================================ -->
+
 <div class="modal fade" id="modalReserva" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -59,14 +57,14 @@
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Usuario</label>
                         <select id="Usuario_Id" class="form-select" required>
-                            @* Llenado dinámico por AJAX *@
+
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Laboratorio</label>
                         <select id="Laboratorio_Id" class="form-select" required>
-                            @* Llenado dinámico por AJAX *@
+
                         </select>
                     </div>
 
@@ -99,9 +97,6 @@
 
 
 
-<!-- ===========================
-          MODAL ELIMINAR
-=========================== -->
 <div class="modal fade" id="modalEliminarReserva" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -132,5 +127,4 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<!-- JS -->
 <script src="~/js/reservas.js"></script>

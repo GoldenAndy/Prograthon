@@ -20,10 +20,10 @@ namespace Gestion_de_Labs.Controllers
             _laboratorioService = laboratorioService;
         }
 
-        // Vista principal
+
         public IActionResult Index() => View();
 
-        // ======== API ========
+
 
         [HttpGet]
         public IActionResult ObtenerTodos()

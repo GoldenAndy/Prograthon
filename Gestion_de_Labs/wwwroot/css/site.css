@@ -34,3 +34,47 @@ body {
     color: #fff !important;
     text-decoration: underline;
 }
+
+
+
+.modo-alto-contraste * {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+.modo-alto-contraste a {
+    color: #00ffff !important;
+}
+
+
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap;
+}
+
+
+
+*:focus {
+    outline: 3px solid #FFC400 !important;
+    outline-offset: 3px !important;
+}
+
+
+.modo-alto-contraste * {
+    transition: none !important;
+}
+
+
+.modo-alto-contraste table,
+.modo-alto-contraste th,
+.modo-alto-contraste td {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
